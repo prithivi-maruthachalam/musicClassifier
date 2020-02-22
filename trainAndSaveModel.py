@@ -32,7 +32,7 @@ y = encoder.fit_transform(genre_list)
 
 #scaling feature coloumns
 scaler = StandardScaler()
-X = scaler.fit_transform(np.array(data.iloc[:,:-1],dtype=float))
+X = np.array(data.iloc[:,:-1],dtype=float)
 
 X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
 

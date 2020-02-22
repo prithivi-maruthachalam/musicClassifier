@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 
 import time
+import sys
 
 import matplotlib.pyplot as plt
 import os
@@ -21,27 +22,12 @@ from keras import layers
 
 from keras.models import model_from_json
 
-
-data = pd.read_csv('data.csv')
+data = pd.read_csv('testFile.csv')
 data = data.drop(['filename'],axis=1)
 
-#this just gets the labels and assigns integers to them
-genre_list = data.iloc[:,-1]
-encoder = LabelEncoder()
-y = encoder.fit_transform(genre_list)
 
-#scaling feature coloumns
-scaler = StandardScaler()
-X = scaler.fit_transform(np.array(data.iloc[:,:-1],dtype=float))
 
-X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
-
-x_val = X_train[:200]
-partial_x_train = X_train[200:]
-
-y_val = y_train[:200]
-partial_y_train = y_train[200:]
-
+#importing the trained model
 json_file = open("trainedModel.json",'r')
 loaded_model = json_file.read()
 json_file.close()
@@ -53,9 +39,10 @@ print("[INFO]: Loaded model")
 model = loaded_model
 model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
 
+data = data.iloc[:,:-1]
+print("-----------------------------------------")
+songFile = data[0:1]
+print(songFile)
 
-newExample = X_test[0:1]
-predictions = model.predict(newExample)
-
-genres = "blues classical country disco hiphop jazz metal pop reggae rock".split()
-print(genres[np.argmax(predictions[0])])
+predictions = model.predict(songFile)
+print(np.argmax(predictions[0]))
